@@ -17,6 +17,10 @@ const logger = function(req, res, next) {
 app.use(logger);
 */
 
+// view engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'))
+
 // body parser middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}))
@@ -24,20 +28,11 @@ app.use(bodyParser.urlencoded({extended: false}))
 // set static path for resources 
 app.use(express.static(path.join(__dirname, 'public')))
 
-const people = [
-	{
-		name: 'Bill',
-		age: 72
-	},
-	{
-		name: 'Dave',
-		age: 81
-	}
-]
-
 // GET request
 app.get('/', (req, res) => {
-	res.json(people); // parsing an array of objects
+	res.render('index', {
+		title: 'Customers'
+	});
 })
 
 app.listen(port, hostname, () => {
