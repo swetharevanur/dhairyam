@@ -1,27 +1,43 @@
-// basic web server
-// a web server uses HTTP to serve files that form
-// web pages to users in response to requests
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path'); // core module so no need for npm install
 
-const http = require('http'); // core module so no need for npm install
-const fs = require('fs'); // file system module
-
-const hostname = '127.0.0.1';
+const hostname = 'localhost';
 const port = '3000';
 
-fs.readFile('index.html', (err, html) => { // arrow function for callback
-	if (err) {
-		throw err;
-	}
+const app = express();
 
-	const server = http.createServer((req, res) => {
-		res.statusCode = 200;
-		res.setHeader('Content-type', 'text/html'); // text/plain just prints, text/html parses HTML code
-		res.write(html);
-		res.end();
-	});
+// custom middleware
+const logger = function(req, res, next) {
+	console.log('Logging...');
+	next();
+}
 
-	server.listen(port, hostname, () => {
-		console.log('Server started on port ' + port);
-	})
-});
+app.use(logger);
+
+// GET request
+app.get('/', (req, res) => {
+	res.send('Hello World'); // res.write() needs res.end() to send
+})
+
+app.listen(port, hostname, () => {
+	console.log('Server started on port ' + port);
+})
+
+// fs.readFile('index.html', (err, html) => { // arrow function for callback
+// 	if (err) {
+// 		throw err;
+// 	}
+
+// 	const server = http.createServer((req, res) => {
+// 		res.statusCode = 200;
+// 		res.setHeader('Content-type', 'text/html'); // text/plain just prints, text/html parses HTML code
+// 		res.write(html);
+// 		res.end();
+// 	});
+
+// 	server.listen(port, hostname, () => {
+// 		console.log('Server started on port ' + port);
+// 	})
+// });
 
