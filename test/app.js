@@ -7,6 +7,7 @@ const port = '3000';
 
 const app = express();
 
+/*
 // custom middleware
 const logger = function(req, res, next) {
 	console.log('Logging...');
@@ -14,30 +15,31 @@ const logger = function(req, res, next) {
 }
 
 app.use(logger);
+*/
+
+// body parser middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}))
+
+// set static path for resources 
+app.use(express.static(path.join(__dirname, 'public')))
+
+const people = [
+	{
+		name: 'Bill',
+		age: 72
+	},
+	{
+		name: 'Dave',
+		age: 81
+	}
+]
 
 // GET request
 app.get('/', (req, res) => {
-	res.send('Hello World'); // res.write() needs res.end() to send
+	res.json(people); // parsing an array of objects
 })
 
 app.listen(port, hostname, () => {
 	console.log('Server started on port ' + port);
 })
-
-// fs.readFile('index.html', (err, html) => { // arrow function for callback
-// 	if (err) {
-// 		throw err;
-// 	}
-
-// 	const server = http.createServer((req, res) => {
-// 		res.statusCode = 200;
-// 		res.setHeader('Content-type', 'text/html'); // text/plain just prints, text/html parses HTML code
-// 		res.write(html);
-// 		res.end();
-// 	});
-
-// 	server.listen(port, hostname, () => {
-// 		console.log('Server started on port ' + port);
-// 	})
-// });
-
