@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path'); // core module so no need for npm install
 const expressValidator = require('express-validator');
+const mongojs = require('mongojs')
+const db = mongojs('dhairyamapp', ['states'])
 
 const hostname = 'localhost';
 const port = '3000';
@@ -29,6 +31,12 @@ app.use(bodyParser.urlencoded({extended: false}))
 // set static path for resources 
 app.use(express.static(path.join(__dirname, 'public')))
 
+// make errors a global variable
+app.use((req, res, next) => {
+	res.locals.errors = null;
+	next();
+});
+
 // load express-validator's error formatting middleware
 app.use(expressValidator({
 	errorFormatter: function(param, msg, value, location) {
@@ -48,33 +56,15 @@ app.use(expressValidator({
 	}
 }));
 
-const users = [
-	{
-		id: 1,
-		first_name: "Bill",
-		last_name: "Hewlett",
-		email: "bill@gmail.com"
-	},
-	{
-		id: 2,
-		first_name: "Dave",
-		last_name: "Packard",
-		email: "dave@gmail.com"
-	},
-	{
-		id: 3,
-		first_name: "John",
-		last_name: "Doe",
-		email: "john@gmail.com"
-	}
-]
-
 // GET request
 app.get('/', (req, res) => {
-	res.render('index', {
-		title: 'Customers',
-		users: users
-	});
+	db.users.find(function (err, docs) {
+		console.log(docs);
+		res.render('index', {
+			title: 'Customers',
+			users: docs
+		});
+	});	
 });
 
 
