@@ -77,6 +77,7 @@ app.post('/users/add', (req, res) => {
 	req.checkBody('email', 'Email is required').notEmpty();
 
 	const errors = req.validationErrors();
+	
 	if (errors) {
 		res.render('index', {
 			title: 'Customers',
@@ -89,8 +90,13 @@ app.post('/users/add', (req, res) => {
 			last_name: req.body.last_name,
 			email: req.body.email
 		}
-
-		console.log('SUCCESS');
+		// write to db collection
+		db.users.insert(newUser, (err, result) => {
+			if (err) {
+				console.log(err);
+			}
+			res.redirect('/');
+		});
 	} 	
 });
 
