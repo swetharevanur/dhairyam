@@ -4,6 +4,7 @@ const path = require('path'); // core module so no need for npm install
 const expressValidator = require('express-validator');
 const mongojs = require('mongojs')
 const db = mongojs('dhairyamapp', ['states'])
+const ObjectId = mongojs.ObjectId;
 
 const hostname = 'localhost';
 const port = '3000';
@@ -98,6 +99,15 @@ app.post('/users/add', (req, res) => {
 			res.redirect('/');
 		});
 	} 	
+});
+
+app.delete('/users/delete/:id', (req, res) => {
+	db.users.remove({_id: ObjectId(req.params.id)}, (err, result) => {
+		if (err) {
+			console.log(err);
+		}
+		res.redirect('/');
+	})
 });
 
 app.listen(port, hostname, () => {
