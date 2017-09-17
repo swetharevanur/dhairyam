@@ -1,6 +1,14 @@
 <% include partials/header %>
 	<h1><%= title %></h1>
 
+	<% if(errors) { %>
+		<ul>
+		<% errors.forEach((error) => { %>
+			<li><%= error.msg %></li>
+		<% }) %>
+		</ul>
+	<% } %>
+
 	<form method="POST" action="/users/add">
 		<label>First Name</label><br>
 		<input type = "text" name = "first_name">
